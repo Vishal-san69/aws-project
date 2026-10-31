@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vishal - AWS Cloud Deployment Portfolio</title>
+  <style>
+    :root {
+      --aws-navy: #131921;
+      --aws-card: #232f3e;
+      --aws-orange: #ff9900;
+      --aws-blue: #0073bb;
+      --bg-color: #0f141d;
+      --card-bg: #1c2531;
+      --text-main: #ffffff;
+      --text-sub: #aab7c4;
+      --border-color: #2e3b4e;
+      --success-green: #2ecc71;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding-bottom: 50px; }
+
+    header { background-color: var(--aws-navy); padding: 25px 40px; border-bottom: 3px solid var(--aws-orange); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    .header-title h1 { font-size: 1.6rem; color: #fff; }
+    .header-title p { color: var(--aws-orange); font-size: 0.9rem; font-weight: 600; }
+    
+    .status-pill { background: rgba(46, 204, 113, 0.15); border: 1px solid var(--success-green); color: var(--success-green); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .pulse { width: 10px; height: 10px; background-color: var(--success-green); border-radius: 50%; box-shadow: 0 0 8px var(--success-green); }
+
+    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+    /* Navigation Tabs */
+    .tab-nav { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; flex-wrap: wrap; }
+    .tab-btn { background: transparent; border: none; color: var(--text-sub); padding: 10px 20px; font-size: 0.95rem; font-weight: 600; cursor: pointer; border-radius: 6px; transition: all 0.3s ease; }
+    .tab-btn:hover { color: var(--aws-orange); background: var(--aws-card); }
+    .tab-btn.active { color: #fff; background: var(--aws-orange); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Cards & Layout */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .card { background: var(--card-bg); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+    .card h3 { color: var(--aws-orange); margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+
+    /* Progress Tracker */
+    .progress-bar-container { background: #0f141d; border-radius: 10px; height: 20px; width: 100%; margin: 15px 0; overflow: hidden; border: 1px solid var(--border-color); }
+    .progress-bar { background: linear-gradient(90deg, var(--aws-orange), #ffc107); height: 100%; width: 100%; transition: width 0.5s ease; }
+
+    .checklist-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; background: var(--aws-navy); margin-bottom: 10px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; }
+    .checklist-item input { accent-color: var(--aws-orange); width: 18px; height: 18px; cursor: pointer; }
+    .checklist-item.completed span { text-decoration: line-through; color: var(--text-sub); }
+
+    /* Interactive Pipeline Simulator */
+    .pipeline-simulator { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+    .sim-node { flex: 1; min-width: 140px; background: var(--aws-navy); padding: 15px; border-radius: 6px; text-align: center; border: 1px solid var(--border-color); position: relative; }
+    .sim-node.active-node { border-color: var(--aws-orange); box-shadow: 0 0 10px rgba(255, 153, 0, 0.3); }
+    .sim-node h4 { font-size: 0.85rem; color: #fff; margin-bottom: 5px; }
+    .sim-node p { font-size: 0.75rem; color: var(--text-sub); }
+
+    .trigger-btn { background: var(--aws-orange); color: #000; border: none; padding: 12px 24px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 20px; width: 100%; transition: background 0.2s; }
+    .trigger-btn:hover { background: #e68a00; }
+
+    /* Skill Tags */
+    .skill-tag { display: inline-block; background: var(--aws-navy); border: 1px solid var(--aws-blue); color: #fff; padding: 6px 14px; border-radius: 15px; font-size: 0.85rem; margin: 5px 4px; }
+
+    footer { text-align: center; color: var(--text-sub); margin-top: 40px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-title">
+      <h1>Final AWS Cloud Deployment Project</h1>
+      <p>Automated CI/CD Pipeline & Serverless Hosting</p>
+    </div>
+    <div class="status-pill">
+      <div class="pulse"></div> Live Pipeline Active
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Navigation Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('overview')">Project Overview</button>
+      <button class="tab-btn" onclick="switchTab('pipeline')">Pipeline Simulator</button>
+      <button class="tab-btn" onclick="switchTab('progress')">Task Progress (100%)</button>
+      <button class="tab-btn" onclick="switchTab('skills')">AWS Skill Matrix</button>
+    </div>
+
+    <!-- TAB 1: OVERVIEW -->
+    <div id="overview" class="tab-content active">
+      <div class="card">
+        <h3>Project Executive Summary</h3>
+        <p>This project implements an automated, production-ready continuous integration and continuous deployment (CI/CD) workflow on Amazon Web Services. Every push to the main branch of the GitHub repository automatically triggers AWS CodePipeline, passing through security verification before updating live assets on Amazon S3.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Source Control</h3>
+          <p><strong>Provider:</strong> GitHub</p>
+          <p><strong>Repository:</strong> aws-serverless-api</p>
+          <p><strong>Branch:</strong> main</p>
+        </div>
+        <div class="card">
+          <h3>Orchestration</h3>
+          <p><strong>Service:</strong> AWS CodePipeline</p>
+          <p><strong>Region:</strong> ap-south-1 (Mumbai)</p>
+          <p><strong>IAM Role:</strong> PassRole & S3 Full Access</p>
+        </div>
+        <div class="card">
+          <h3>Hosting & Defense</h3>
+          <p><strong>Storage:</strong> Amazon S3 Bucket</p>
+          <p><strong>Security:</strong> HTTPS Enforcement Policy</p>
+          <p><strong>Monitoring:</strong> CloudWatch Billing Alarm</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: INTERACTIVE PIPELINE SIMULATOR -->
+    <div id="pipeline" class="tab-content">
+      <div class="card">
+        <h3>Interactive Deployment Simulator</h3>
+        <p>Click the button below to simulate an automated code push and trace execution through your AWS architecture nodes:</p>
+
+        <div class="pipeline-simulator">
+          <div class="sim-node" id="node-1">
+            <h4>1. Git Push</h4>
+            <p>Developer commit</p>
+          </div>
+          <div class="sim-node" id="node-2">
+            <h4>2. GitHub App</h4>
+            <p>Webhook trigger</p>
+          </div>
+          <div class="sim-node" id="node-3">
+            <h4>3. CodePipeline</h4>
+            <p>IAM Security Check</p>
+          </div>
+          <div class="sim-node" id="node-4">
+            <h4>4. Amazon S3</h4>
+            <p>Unzip & Host</p>
+          </div>
+          <div class="sim-node" id="node-5">
+            <h4>5. CloudWatch</h4>
+            <p>Metric update</p>
+          </div>
+        </div>
+
+        <button class="trigger-btn" onclick="runPipelineSimulation()">Simulate Automated Deployment</button>
+        <p id="sim-status" style="margin-top: 15px; text-align: center; color: var(--aws-orange); font-weight: bold;"></p>
+      </div>
+    </div>
+
+    <!-- TAB 3: PROJECT PROGRESS & RUBRIC -->
+    <div id="progress" class="tab-content">
+      <div class="card">
+        <h3>Module 07 Rubric & Progress Tracker</h3>
+        <p>Current Project Completion: <strong id="progress-percent">100%</strong></p>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="checklist">
+          <div class="checklist-item completed">
+            <span>1. Build real-world cloud application</span>
+            <input type="checkbox" checked disabled>
+          </div>
+          <div class="checklist-item completed">
+            <span>2. Use at least 3 AWS services (S3, CodePipeline, IAM, CloudWatch)</span>
+            <input type="checkbox" checked disabled>
+          </div>
+          <div class="checklist-item completed">
+            <span>3. Automated deployment setup</span>
+            <input type="checkbox" checked disabled>
+          </div>
+          <div class="checklist-item completed">
+            <span>4. Configure basic security & IAM roles</span>
+            <input type="checkbox" checked disabled>
+          </div>
+          <div class="checklist-item completed">
+            <span>5. Create AWS Architecture Diagram</span>
+            <input type="checkbox" checked disabled>
+          </div>
+          <div class="checklist-item completed">
+            <span>6. Document implementation & policy JSONs</span>
+            <input type="checkbox" checked disabled>
+          </div>
+          <div class="checklist-item completed">
+            <span>7. Prepare demonstration video walkthrough</span>
+            <input type="checkbox" checked disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: SKILL MATRIX -->
+    <div id="skills" class="tab-content">
+      <div class="card">
+        <h3>Cloud & DevOps Competencies Demonstrated</h3>
+        <div>
+          <span class="skill-tag">Amazon S3</span>
+          <span class="skill-tag">AWS CodePipeline</span>
+          <span class="skill-tag">AWS IAM Roles & Policies</span>
+          <span class="skill-tag">Amazon CloudWatch Alarms</span>
+          <span class="skill-tag">CI/CD Automation</span>
+          <span class="skill-tag">Git & GitHub Integration</span>
+          <span class="skill-tag">Static Website Hosting</span>
+          <span class="skill-tag">Least-Privilege Security</span>
+          <span class="skill-tag">JSON Policy Authoring</span>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Vishal - Final AWS Cloud Deployment Project • Powered by AWS S3 & CodePipeline</p>
+    </footer>
+
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function runPipelineSimulation() {
+      const nodes = ['node-1', 'node-2', 'node-3', 'node-4', 'node-5'];
+      const statusText = document.getElementById('sim-status');
+      
+      nodes.forEach(n => document.getElementById(n).classList.remove('active-node'));
+      
+      let step = 0;
+      statusText.innerText = "Initiating git push simulation...";
+      
+      const interval = setInterval(() => {
+        if (step > 0) document.getElementById(nodes[step-1]).classList.remove('active-node');
+        if (step < nodes.length) {
+          document.getElementById(nodes[step]).classList.add('active-node');
+          statusText.innerText = `Executing Stage ${step + 1}: ${nodes[step].replace('node-', 'Step ')}`;
+          step++;
+        } else {
+          clearInterval(interval);
+          statusText.innerText = "Deployment Succeeded! Live site updated successfully.";
+        }
+      }, 700);
+    }
+  </script>
+</body>
+</html>
